@@ -38,42 +38,46 @@
       function renderQuestions() {
         questionsElement.innerHTML = ""; // clear before render
         for (let i = 0; i < questions.length; i++) {
-          const question = questions[i];
-          const questionElement = document.createElement("div");
-          questionElement.classList.add("question");
+  const question = questions[i];
+  const questionElement = document.createElement("div");
+  questionElement.classList.add("question");
 
-          const questionText = document.createElement("p");
-          questionText.textContent = `${i + 1}. ${question.question}`;
-          questionElement.appendChild(questionText);
+  const questionText = document.createElement("p");
+  questionText.textContent = question.question; // Remove numbering
+  questionElement.appendChild(questionText);
 
-          for (let j = 0; j < question.choices.length; j++) {
-            const choice = question.choices[j];
+  for (let j = 0; j < question.choices.length; j++) {
+    const choice = question.choices[j];
+    const choiceWrapper = document.createElement("label");
 
-            const choiceWrapper = document.createElement("label");
+    const choiceElement = document.createElement("input");
+    choiceElement.type = "radio";
+    choiceElement.name = `question-${i}`;
+    choiceElement.value = choice;
 
-            const choiceElement = document.createElement("input");
-            choiceElement.type = "radio";
-            choiceElement.name = `question-${i}`;
-            choiceElement.value = choice;
+    // Restore previous selection with checked attribute
+    if (userAnswers[i] === choice) {
+      choiceElement.checked = true;
+      choiceElement.setAttribute("checked", "true");
+    }
 
-            // Restore previous selection
-            if (userAnswers[i] === choice) {
-              choiceElement.checked = true;
-            }
+    choiceElement.addEventListener("change", (e) => {
+      userAnswers[i] = e.target.value;
+      sessionStorage.setItem("progress", JSON.stringify(userAnswers));
 
-            // Save to sessionStorage on change
-            choiceElement.addEventListener("change", (e) => {
-              userAnswers[i] = e.target.value;
-              sessionStorage.setItem("progress", JSON.stringify(userAnswers));
-            });
+      // update checked attribute for Cypress
+      const siblings = document.getElementsByName(`question-${i}`);
+      siblings.forEach((sib) => sib.removeAttribute("checked"));
+      e.target.setAttribute("checked", "true");
+    });
 
-            choiceWrapper.appendChild(choiceElement);
-            choiceWrapper.appendChild(document.createTextNode(choice));
-            questionElement.appendChild(choiceWrapper);
-          }
+    choiceWrapper.appendChild(choiceElement);
+    choiceWrapper.appendChild(document.createTextNode(choice));
+    questionElement.appendChild(choiceWrapper);
+  }
 
-          questionsElement.appendChild(questionElement);
-        }
+  questionsElement.appendChild(questionElement);
+}
       }
 
       // Display previous score on reload
