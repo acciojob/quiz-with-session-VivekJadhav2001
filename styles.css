@@ -1,1 +1,29 @@
 /*  your css code here. If applicable */
+body {
+        font-family: Arial, sans-serif;
+        background-color: #3f3f3f;
+        color: white;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+      }
+      .question {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin: 5px 0;
+        cursor: pointer;
+      }
+      #score {
+        border: 2px solid white;
+        padding: 20px;
+        margin-top: 20px;
+        display: none;
+        font-size: 1.2rem;
+        text-align: center;
+      }
+      input[type="radio"] {
+        margin-right: 10px;
+      }
